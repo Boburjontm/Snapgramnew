@@ -4,7 +4,7 @@ import { useCreateUserMutation } from "../../../redux/api/users-api";
 import { Link, useNavigate } from "react-router-dom";
 import InputComponent from "../../../components/input/InputComponent";
 import { toast } from "react-toastify";
-import { GoogleIcon, SnapgramIcon } from "../../../../public/images";
+import { GoogleIcon } from "../../../../public/images";
 import Image from "../../../../public/images/bg_image.png";
 
 function SignUp() {
