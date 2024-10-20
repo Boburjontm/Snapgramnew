@@ -54,6 +54,7 @@ function Login() {
         }
       );
 
+      // LocalStorage da tokenlarni saqlash
       window.localStorage.setItem("accessToken", res.accessToken);
       window.localStorage.setItem("refreshToken", res.refreshToken);
       context?.setToken(true);
