@@ -8,8 +8,8 @@ import { useCreateUserMutation } from "../../../redux/api/users-api";
 import { toast } from "react-toastify";
 
 function SignUp() {
-  const [createUser, { isLoading }] = useCreateUserMutation(); 
-  const navigate = useNavigate();
+  const [createUser, { isLoading }] = useCreateUserMutation();
+  const navigate = useNavigate(); // navigate hookini ishlatyapmiz
 
   const SignUpInputsInfo: UserInfo[] = [
     {
@@ -57,7 +57,7 @@ function SignUp() {
     try {
       await createUser(data).unwrap();
       toast.success("Account successfully created!");
-      navigate("/login");
+      navigate("/login"); // Ro'yxatdan o'tgandan so'ng login sahifasiga yo'naltirish
     } catch (err) {
       toast.error("Failed to create account. Please try again.");
       console.error("Error creating account:", err);

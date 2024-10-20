@@ -49,15 +49,15 @@ function Login() {
         </div>,
         {
           className: "rounded-lg bg-black_500 text-white shadow-lg",
-          position: "top-center", 
-          autoClose: 3000, 
+          position: "top-center",
+          autoClose: 3000,
         }
       );
 
       window.localStorage.setItem("accessToken", res.accessToken);
       window.localStorage.setItem("refreshToken", res.refreshToken);
       context?.setToken(true);
-      navigate("/");
+      navigate("/"); // Muvaffaqiyatli kirgandan so'ng asosiy sahifaga yo'naltirish
 
     } catch (err) {
       toast.error(
@@ -66,8 +66,8 @@ function Login() {
         </div>,
         {
           className: "rounded-lg bg-black_500 text-white shadow-lg",
-          position: "top-center", 
-          autoClose: 3000, 
+          position: "top-center",
+          autoClose: 3000,
         }
       );
 
