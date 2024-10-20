@@ -109,6 +109,7 @@ function Login() {
             </button>
           </div>
 
+          {/* Foydalanuvchi ma'lumotlarini ko'rsatish */}
           <div className="text-center text-light-200 text-sm mt-5">
             <p>Username: <strong>John</strong></p>
             <p>Password: <strong>55555555</strong></p>
