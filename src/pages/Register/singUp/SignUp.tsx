@@ -1,63 +1,42 @@
-import { Link, useNavigate } from "react-router-dom";
-import { GoogleIcon } from "../../../../public/images";
-import Image from "../../../../public/images/bg_image.png";
+import { FormEvent, useState } from "react";
 import { CreateNewUser, UserInfo } from "../../../types";
-import { FormEvent } from "react";
-import InputComponent from "../../../components/input/InputComponent";
 import { useCreateUserMutation } from "../../../redux/api/users-api";
+import { Link, useNavigate } from "react-router-dom";
+import InputComponent from "../../../components/input/InputComponent";
 import { toast } from "react-toastify";
+import { GoogleIcon, SnapgramIcon } from "../../../../public/images";
+import Image from "../../../../public/images/bg_image.png";
 
 function SignUp() {
   const [createUser, { isLoading }] = useCreateUserMutation();
-  const navigate = useNavigate(); // navigate hookini ishlatyapmiz
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState<CreateNewUser>({
+    full_name: "",
+    email: "",
+    username: "",
+    password: "",
+  });
 
   const SignUpInputsInfo: UserInfo[] = [
-    {
-      id: 1,
-      span_name: "name",
-      name: "full_name",
-      type: "text",
-    },
-    {
-      id: 2,
-      span_name: "email",
-      name: "email",
-      type: "email",
-    },
-    {
-      id: 3,
-      span_name: "user Name",
-      name: "username",
-      type: "text",
-    },
-    {
-      id: 4,
-      span_name: "password",
-      name: "password",
-      type: "password",
-    },
+    { id: 1, span_name: "name", name: "full_name", type: "text" },
+    { id: 2, span_name: "email", name: "email", type: "email" },
+    { id: 3, span_name: "user Name", name: "username", type: "text" },
+    { id: 4, span_name: "password", name: "password", type: "password" },
   ];
 
-  async function handleFormSubmit(e: FormEvent) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const target = new FormData(e.target as HTMLFormElement);
-
-    const full_name = target.get("full_name") as string;
-    const email = target.get("email") as string;
-    const username = target.get("username") as string;
-    const password = target.get("password") as string;
-
-    const data: CreateNewUser = {
-      full_name,
-      email,
-      username,
-      password,
-    };
 
     try {
-      await createUser(data).unwrap();
+      await createUser(formData).unwrap();
       toast.success("Account successfully created!");
-      navigate("/login"); // Ro'yxatdan o'tgandan so'ng login sahifasiga yo'naltirish
+      navigate("/");
     } catch (err) {
       toast.error("Failed to create account. Please try again.");
       console.error("Error creating account:", err);
@@ -70,25 +49,26 @@ function SignUp() {
         <form onSubmit={handleFormSubmit} className="w-[400px] text-white">
           <div className="text-center space-y-[12px] mb-[32px]">
             <h1 className="font-bold text-3xl">Create a new account</h1>
-            <p className="text-light-300">
-              To use Snapgram, please enter your details.
-            </p>
+            <p className="text-light-300">To use Snapgram, please enter your details.</p>
           </div>
 
-          {/* Kiritish komponentlari */}
           <div className="flex flex-col gap-5">
             {SignUpInputsInfo.map((item: UserInfo) => (
-              <InputComponent item={item} key={item.id} />
+              <InputComponent
+                key={item.id}
+                item={item}
+                value={formData[item.name as keyof CreateNewUser]}
+                onChange={handleChange}
+              />
             ))}
           </div>
 
-          {/* Submit va Google bilan ro'yxatdan o'tish tugmalari */}
           <div className="mt-[30px] mb-[32px] flex flex-col space-y-5">
             <button
               type="submit"
               className="bg-primary_500 capitalize py-[13px] w-full rounded-lg font-semibold"
             >
-              {isLoading ? "Signing up..." : "Sign Up"}
+              {isLoading ? "Creating..." : "Sign Up"}
             </button>
             <button
               type="button"
@@ -99,18 +79,16 @@ function SignUp() {
             </button>
           </div>
 
-          {/* Log in link */}
-          <p className="text-center text-light-200 text-sm">
+          <p className="text-center text-light-200 text-sm mt-5">
             Already have an account?{" "}
-            <Link to="/login" className="text-primary_500 font-semibold">
-              Log in
+            <Link to="/" className="text-primary_500 font-semibold">
+              Log In
             </Link>
           </p>
         </form>
       </div>
 
-      {/* Orqa fon rasmi */}
-      <div className="flex-1">
+      <div className="hidden md:flex md:flex-1">
         <img src={Image} className="w-full h-full object-cover" alt="Background" />
       </div>
     </section>

@@ -1,4 +1,5 @@
-import { api } from "./index";
+// productApi.ts
+import { api } from "../api/index";
 
 export const productApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -26,7 +27,7 @@ export const productApi = api.injectEndpoints({
     }),
     getAllUser: build.query({
       query: () => ({
-        url: `/api/user/all`,
+        url: "/api/user/all",
       }),
       providesTags: ["User"],
     }),
@@ -60,23 +61,23 @@ export const productApi = api.injectEndpoints({
     }),
     uploadFiles: build.mutation({
       query: (body) => ({
-        url: '/api/upload/files',
+        url: "/api/upload/files",
         method: "POST",
-        body
+        body,
       }),
-      invalidatesTags: [{ type: "User" }]
-    })
+      invalidatesTags: [{ type: "User" }],
+    }),
   }),
 });
 
 export const {
   useCreateUserMutation,
-  useGetAllUserQuery,
-  useFollowMutation,
   useLoginUserMutation,
   useGetUserQuery,
+  useGetAllUserQuery,
+  useFollowMutation,
   useUnfollowMutation,
   useGetFeedQuery,
   useCreatePostMutation,
-  useUploadFilesMutation
+  useUploadFilesMutation,
 } = productApi;
