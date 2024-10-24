@@ -24,3 +24,11 @@ export interface LoginUser {
   username: string,
   password: string
 }
+// interface UserType {
+//   fullName: string;
+//   username: string;
+//   photo: string;
+//   bio?: string;
+//   messages?: Message[];
+// }
+

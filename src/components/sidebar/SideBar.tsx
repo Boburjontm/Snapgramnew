@@ -1,9 +1,20 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import Logo from "../../../public/images/Logo.png";
-import {ChatIcon,CreatePostIcon,ExploreIcon,HomeIcon,LogOutIcon,PeopleIcon,ReelsIcon,SavedIcon,SettignsIcon,} from "../../../public/images";
-import { useGetUserQuery } from "../../redux/api/users-api";
-import { Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
+import { Skeleton } from "@chakra-ui/react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useGetUserQuery } from "../../redux/api/users-api";
+import Logo from "../../../public/images/Logo.png";
+import Img from "../../../public/images/lion.svg";
+import {
+  ChatIcon,
+  CreatePostIcon,
+  ExploreIcon,
+  HomeIcon,
+  LogOutIcon,
+  PeopleIcon,
+  ReelsIcon,
+  SavedIcon,
+  SettignsIcon,
+} from "../../../public/images";
 import { Modal } from "antd";
 
 const Side: React.FC = () => {
@@ -11,8 +22,9 @@ const Side: React.FC = () => {
   const currentUserUsername = window.localStorage.getItem('userData') 
     ? JSON.parse(window.localStorage.getItem('userData') as string).username 
     : null;
+
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false); // Profil modal
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false); // Profile modal
   const { data, isLoading } = useGetUserQuery(currentUserUsername);
 
   const handleLogOut = () => {
@@ -33,61 +45,18 @@ const Side: React.FC = () => {
   };
 
   const navbarPages = [
-    {
-      id: 1,
-      title: "Home",
-      Icon: <HomeIcon />,
-      path: "/",
-    },
-    {
-      id: 2,
-      title: "Explore",
-      Icon: <ExploreIcon />,
-      path: "/explore",
-    },
-    {
-      id: 3,
-      title: "People",
-      Icon: <PeopleIcon />,
-      path: "/people",
-    },
-    {
-      id: 4,
-      title: "Saved",
-      Icon: <SavedIcon />,
-      path: "/saved",
-    },
-    {
-      id: 5,
-      title: "Reels",
-      Icon: <ReelsIcon />,
-      path: "/reels",
-    },
-    {
-      id: 6,
-      title: "Chats",
-      Icon: <ChatIcon />,
-      path: "/chats",
-    },
-    {
-      id: 7,
-      title: "Create Post",
-      Icon: <CreatePostIcon />,
-      path: "/create",
-    },
+    { id: 1, title: "Home", Icon: <HomeIcon />, path: "/" },
+    { id: 2, title: "Explore", Icon: <ExploreIcon />, path: "/explore" },
+    { id: 3, title: "People", Icon: <PeopleIcon />, path: "/people" },
+    { id: 4, title: "Saved", Icon: <SavedIcon />, path: "/saved" },
+    { id: 5, title: "Reels", Icon: <ReelsIcon />, path: "/reels" },
+    { id: 6, title: "Chats", Icon: <ChatIcon />, path: "/chats" },
+    { id: 7, title: "Create Post", Icon: <CreatePostIcon />, path: "/create" },
   ];
 
   const navbarLastPage = [
-    {
-      id: 1,
-      title: "Logout",
-      Icon: <LogOutIcon />,
-    },
-    {
-      id: 2,
-      title: "Settings",
-      Icon: <SettignsIcon />,
-    },
+    { id: 1, title: "Logout", Icon: <LogOutIcon /> },
+    { id: 2, title: "Settings", Icon: <SettignsIcon /> },
   ];
 
   return (
@@ -106,29 +75,27 @@ const Side: React.FC = () => {
       </style>
       <div className="flex flex-col gap-8 md:gap-11 h-full">
         <img src={Logo} className="w-[120px] md:w-[171px] h-[36px]" alt="Logo" />
-        
-        <div className="flex items-center gap-[10px]">
+
+        <div className="flex gap-[10px] items-center mt-[44px]">
           {isLoading ? (
-            <Skeleton width="40px" height="40px" borderRadius="50%" />
+            <Skeleton width="56px" height="56px" borderRadius="50%" />
           ) : (
             <img
-              src={`${import.meta.env.VITE_API_URL}${data?.photo.username}`}
-              className="w-[40px] h-[40px] rounded-full cursor-pointer"
+              className="rounded-full bg-white cursor-pointer"
+              src={data?.photo ? `${import.meta.env.VITE_API_URL}${data?.photo}` : Img}
               alt="User profile"
-              onClick={openProfileModal} 
+              width={56}
+              height={56}
+              onError={(e) => (e.currentTarget.src = Img)} // Fallback image
             />
           )}
           {isLoading ? (
             <Skeleton width="100%" height="20px" />
           ) : (
-            <div className="flex flex-col text-white cursor-pointer" onClick={openProfileModal}>
-              <h1 className="text-[14px] md:text-[18px] font-bold line-clamp-1">
-                {data?.fullName || "User Name"}
-              </h1>
-              <p className="text-[12px] md:text-[14px] line-clamp-1 text-light-300">
-                @{data?.username || "username"}
-              </p>
-            </div>
+            <NavLink to={`/profile`} className="flex flex-col" >
+              <p className="capitalize">{data?.fullName || "User Name"}</p>
+              <p className="capitalize text-gray-500 text-[14px]">@{data?.username || "username"}</p>
+            </NavLink>
           )}
         </div>
 
@@ -175,16 +142,17 @@ const Side: React.FC = () => {
             open={isProfileModalOpen}
             onOk={closeProfileModal}
             onCancel={closeProfileModal}
-            footer={null} // Modal pastki qismidagi standart tugmalarni olib tashlash
+            footer={null} // Remove default modal buttons
           >
             <div className="flex flex-col items-center">
               <img
-                src={`${import.meta.env.VITE_API_URL}${data?.photo}`}
+                src={data?.photo ? `${import.meta.env.VITE_API_URL}${data?.photo}` : Img}
                 className="w-[80px] h-[80px] rounded-full"
                 alt="User profile"
+                onError={(e) => (e.currentTarget.src = Img)} // Fallback for profile image
               />
-              <h2 className="text-xl font-bold mt-4">{data?.fullName}</h2>
-              <p className="text-gray-500">@{data?.username}</p>
+              <h2 className="text-xl font-bold mt-4">{data?.fullName || "User Name"}</h2>
+              <p className="text-gray-500">@{data?.username || "username"}</p>
               <p className="text-sm text-light-300">
                 {data?.bio || "No bio available"}
               </p>

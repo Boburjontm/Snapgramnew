@@ -67,6 +67,22 @@ export const productApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: "User" }],
     }),
+     getUserName: build.query({
+      query: (username) => ({
+        url: `/api/user/profile/${username}`,
+      }),
+      providesTags: [{ type: 'User' }],
+  
+  }),
+   getAllPosts: build.query({
+    query: (username) => ({
+      url: `/api/post/${username}`,
+    }),
+    providesTags: [{ type: 'User' }],
+  }),
+   
+
+
   }),
 });
 
@@ -80,4 +96,7 @@ export const {
   useGetFeedQuery,
   useCreatePostMutation,
   useUploadFilesMutation,
+  useGetUserNameQuery,
+  useGetAllPostsQuery
+  
 } = productApi;

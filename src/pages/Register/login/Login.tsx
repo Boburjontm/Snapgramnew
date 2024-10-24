@@ -2,7 +2,7 @@ import { FormEvent, useContext, useState } from "react";
 import { LoginUser, UserInfo } from "../../../types";
 import { useLoginUserMutation } from "../../../redux/api/users-api";
 import { Link, useNavigate } from "react-router-dom";
-import InputComponent from "../../../components/input/InputComponent";
+import InputComponent from "../../../components/input/Input";
 import { Context } from "../../../context/Context";
 import { toast } from "react-toastify";
 import { SnapgramIcon, GoogleIcon } from "../../../../public/images";
@@ -44,6 +44,8 @@ function Login() {
       );
 
       // Store tokens
+
+      window.localStorage.setItem("userData", JSON.stringify(formData));
       window.localStorage.setItem("accessToken", res.accessToken);
       window.localStorage.setItem("refreshToken", res.refreshToken);
 

@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { CreateNewUser, UserInfo } from "../../../types";
 import { useCreateUserMutation } from "../../../redux/api/users-api";
 import { Link, useNavigate } from "react-router-dom";
-import InputComponent from "../../../components/input/InputComponent";
+import InputComponent from "../../../components/input/Input";
 import { toast } from "react-toastify";
 import { GoogleIcon } from "../../../../public/images";
 import Image from "../../../../public/images/bg_image.png";
