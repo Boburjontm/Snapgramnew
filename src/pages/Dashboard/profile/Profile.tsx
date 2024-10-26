@@ -1,19 +1,20 @@
+import DefaultImage from "../../../../public/images/lion.svg"; // Changed Image to DefaultImage
+import { useNavigate } from "react-router-dom";
 import {
   useGetAllPostsQuery,
   useGetUserNameQuery,
 } from "../../../redux/api/api";
-import Image from "../../../../public/images/lion.svg";
-import { useNavigate } from "react-router-dom";
 
-const Profile = () => {
+const UserProfile = () => {
   const navigate = useNavigate();
-  const currentUsername = window.localStorage.getItem("userData")
-    ? JSON.parse(window.localStorage.getItem("userData") as string).username
+  const currentUser = window.localStorage.getItem("userData")
+    ? JSON.parse(window.localStorage.getItem("userData") as string)
     : null;
 
-  const { data, isLoading: isUserLoading } =
+  const currentUsername = currentUser?.username;
+  const { data: userData, isLoading: isUserLoading } =
     useGetUserNameQuery(currentUsername);
-  const { data: posts, isLoading: isPostsLoading } =
+  const { data: userPosts, isLoading: isPostsLoading } =
     useGetAllPostsQuery(currentUsername);
 
   // Conditional loading UI
@@ -28,38 +29,43 @@ const Profile = () => {
   return (
     <div className="h-screen overflow-y-auto bg-black text-white">
       <div className="w-full p-4 md:p-10 lg:p-[40px] rounded-md shadow-lg pt-[60px] pl-4 md:pl-10 lg:pl-[80px]">
-        <div className="flex flex-col lg:flex-row items-center gap-12 mb-[30px]">
+        <div className="flex flex-col lg:flex-row items-center gap-16 mb-[30px]">
           <div className="relative">
             <img
-              onError={(e) => (e.currentTarget.src = Image)}
-              src={data?.avatar || "/default-avatar.png"}
-              alt={data?.fullname}
-              className="w-[120px] h-[120px] md:w-[160px] md:h-[160px] rounded-full object-cover border-gray-700 shadow-xl transition-transform duration-200 hover:scale-110"
+              onError={(e) => (e.currentTarget.src = DefaultImage)}
+              src={userData?.photo || DefaultImage}
+              alt={userData?.fullname}
+              className="w-[120px] h-[120px] md:w-[160px] md:h-[160px] rounded-full object-cover border-gray-700 shadow-xl transition-transform duration-200"
             />
           </div>
           <div className="text-left">
-            {data?.fullName && (
+            {userData?.fullName && (
               <h2 className="text-[24px] md:text-[36px] font-bold mb-2 text-white">
-                {data.fullName}
+                {userData.fullName}
               </h2>
             )}
-            {data?.username && (
+            {userData?.username && (
               <p className="text-[#7878A3] text-[16px] md:text-[18px] mb-[20px]">
                 <span className="font-semibold">Username: @</span>
-                {data.username}
+                {userData.username}
+              </p>
+            )}
+            {userData?.bio && (
+              <p className="text-gray-400 text-[16px] md:text-[18px] mb-4">
+                {userData.bio}
               </p>
             )}
 
             <div className="flex items-center gap-8 mt-6">
               <div className="text-center">
                 <p className="font-bold text-lg md:text-xl text-white">
-                  {data?.followers?.length || 0}
+                  {userData?.followers?.length || 0}
                 </p>
                 <p className="text-sm text-gray-400">Followers</p>
               </div>
               <div className="text-center">
                 <p className="font-bold text-lg md:text-xl text-white">
-                  {data?.following?.length || 0}
+                  {userData?.following?.length || 0}
                 </p>
                 <p className="text-sm text-gray-400">Following</p>
               </div>
@@ -77,7 +83,7 @@ const Profile = () => {
           Posts
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
-          {posts?.map((post: any, index: number) => (
+          {userPosts?.map((post: any, index: number) => (
             <div
               key={index}
               className="rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
@@ -85,7 +91,7 @@ const Profile = () => {
               <div className="p-4 shadow-lg">
                 {post?.content[0]?.type === "IMAGE" ? (
                   <img
-                    src={post?.content[0]?.url || Image}
+                    src={post?.content[0]?.url || DefaultImage}
                     alt={post?.content_alt || "Post image"}
                     className="w-full object-cover rounded-lg"
                   />
@@ -112,4 +118,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

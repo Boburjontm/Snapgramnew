@@ -3,57 +3,55 @@ import Img from "../../../../public/images/gall.svg";
 import Img2 from "../../../../public/images/tubeimg.svg";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import {
-  useCreatePostMutation,
-  useUploadFilesMutation,
+  useCreatePostMutation as useAddPostMutation,
+  useUploadFilesMutation as useSendFilesMutation,
 } from "../../../redux/api/api";
 import { useNavigate } from "react-router-dom";
 import { imageFileTypes } from "../home/Home";
 
-
-
-function CreatePost() {
+function NewPost() {
   const navigate = useNavigate();
-  const [uploadFiles, { isLoading }] = useUploadFilesMutation();
-  const [createPost, { isLoading: isLoadingPost }] = useCreatePostMutation();
-  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
-  const [caption, setCaption] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [altText, setAltText] = useState<string>("");
-  const [uploadedMedia, setUploadedMedia] = useState<any>([]);
+  const [sendFiles, { isLoading: isFileUploading }] = useSendFilesMutation();
+  const [addPost, { isLoading: isPostSharing }] = useAddPostMutation();
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [description, setDescription] = useState<string>("");
+  const [place, setPlace] = useState<string>("");
+  const [altDescription, setAltDescription] = useState<string>("");
+  const [mediaContent, setMediaContent] = useState<any>([]);
 
-  function handleUpload() {
+  function uploadMedia() {
     const formData = new FormData();
-    formData.append("location", location);
-    formData.append("content_alt", altText);
-    mediaFiles.forEach((file) => {
+    formData.append("location", place);
+    formData.append("content_alt", altDescription);
+    selectedFiles.forEach((file) => {
       formData.append("files", file, file.name);
     });
 
-    uploadFiles(formData)
+    sendFiles(formData)
       .unwrap()
       .then((response) => {
         const fileUrls = response.files
           .flat()
           .map((file: { url: string }) => file.url);
-        const mediaContent = fileUrls.map((url: string) => {
+        const content = fileUrls.map((url: string) => {
           const isImage = imageFileTypes.some((type) => url.includes(type));
           console.log(response);
           return { url, type: isImage ? "IMAGE" : "VIDEO" };
         });
-        setUploadedMedia(mediaContent);
+        setMediaContent(content);
       });
   }
 
-  function handleFormSubmit(e: FormEvent) {
+  function submitPost(e: FormEvent) {
     e.preventDefault();
-    const postData = {
-      content: uploadedMedia,
-      location,
-      content_alt: altText,
-      caption,
+    const postDetails = {
+      content: mediaContent,
+      location: place,
+      content_alt: altDescription,
+      caption: description,
     };
 
-    createPost(postData)
+    addPost(postDetails)
       .unwrap()
       .then(() => navigate("/"));
   }
@@ -66,26 +64,26 @@ function CreatePost() {
         </span>
         <p className="text-4xl font-bold">Create a Post</p>
       </div>
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+      <form onSubmit={submitPost} className="flex flex-col gap-4">
         {/* Caption Input */}
         <span className="font-medium text-lg">Caption</span>
         <label className="flex flex-col gap-3">
           <textarea
             required
             rows={4}
-            name="caption"
+            name="description"
             className="bg-dark-300 resize-none p-4 outline-none"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </label>
 
         {/* Media Upload Section */}
         <span className="font-medium text-lg">Add Photos/Videos</span>
         <label className="flex flex-col gap-3 relative cursor-pointer">
-          {mediaFiles.length ? (
+          {selectedFiles.length ? (
             <div className="bg-dark-300 w-full flex-wrap flex gap-3 p-10 cursor-pointer">
-              {mediaFiles.map((file, index) => {
+              {selectedFiles.map((file, index) => {
                 const mediaUrl = URL.createObjectURL(file);
                 return (
                   <div className="relative" key={index}>
@@ -108,7 +106,9 @@ function CreatePost() {
                       type="button"
                       className="absolute top-0 right-0 bg-red-500 text-white p-2"
                       onClick={() =>
-                        setMediaFiles(mediaFiles.filter((_, i) => i !== index))
+                        setSelectedFiles(
+                          selectedFiles.filter((_, i) => i !== index)
+                        )
                       }
                     >
                       <MdOutlineDeleteOutline />
@@ -120,11 +120,10 @@ function CreatePost() {
                 <button
                   type="button"
                   className="font-semibold py-3 h-fit px-[20px] bg-purple w-fit mt-auto ml-auto rounded-lg"
-                  onClick={handleUpload}
+                  onClick={uploadMedia}
                 >
-                  {isLoading ? "Uploading..." : "Upload"}
+                  {isFileUploading ? "Uploading..." : "Upload"}
                 </button>
-               
               </div>
             </div>
           ) : (
@@ -143,7 +142,7 @@ function CreatePost() {
                   </span>
                   <input
                     onChange={(e) =>
-                      setMediaFiles(Array.from(e.target.files || []))
+                      setSelectedFiles(Array.from(e.target.files || []))
                     }
                     type="file"
                     id="chooseFile"
@@ -162,12 +161,11 @@ function CreatePost() {
           <span className="font-medium text-lg">Add Location</span>
           <div className="bg-dark-300 flex items-center p-2 justify-between">
             <input
-              name="location"
+              name="place"
               required
               className="outline-none bg-transparent w-full p-2"
-              placeholder="Enter location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              value={place}
+              onChange={(e) => setPlace(e.target.value)}
             />
           </div>
         </label>
@@ -175,26 +173,25 @@ function CreatePost() {
         <label className="flex flex-col gap-3">
           <span className="font-medium text-lg">Photo/Video Alt Text</span>
           <input
-            name="content_alt"
+            name="altDescription"
             required
             className="bg-dark-300 p-4 outline-none"
-            placeholder="Alt text for accessibility"
-            value={altText}
-            onChange={(e) => setAltText(e.target.value)}
+            value={altDescription}
+            onChange={(e) => setAltDescription(e.target.value)}
           />
         </label>
 
         <button
           type="submit"
           className={`font-semibold py-3 px-[20px] bg-purple capitalize w-fit ml-auto rounded-lg ${
-            isLoadingPost ? "opacity-80" : "opacity-100"
+            isPostSharing ? "opacity-80" : "opacity-100"
           }`}
         >
-          {isLoadingPost ? "sharing post..." : "share post"}
+          {isPostSharing ? "Sharing Post..." : "Share Post"}
         </button>
       </form>
     </section>
   );
 }
 
-export default CreatePost;
+export default NewPost;

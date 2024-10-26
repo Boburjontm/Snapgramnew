@@ -5,10 +5,12 @@ import {
   useGetAllUserQuery,
   useGetFeedQuery,
   useGetUserQuery,
+  useLikePostMutation,
 } from "../../../redux/api/api";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { LikeIcon, LikedIcon } from "../../../assets";
 
 export const imageFileTypes = [
   ".png",
@@ -33,6 +35,10 @@ function Home() {
     };
     return date.toLocaleString("en-US", options).replace(",", " at");
   };
+  const [likePost] = useLikePostMutation();
+  const handleLikeClick = (postId: string) => {
+    likePost(postId);
+  };
 
   const currentUserUsername = window.localStorage.getItem("userData")
     ? JSON.parse(window.localStorage.getItem("userData") as string).username
@@ -42,7 +48,7 @@ function Home() {
   const { data: currentUserData } = useGetUserQuery(currentUserUsername);
   const { data: allUser } = useGetAllUserQuery(true);
 
-  console.log(allUser);
+  console.log(feeds);
 
   const UsersCard = (): JSX.Element => {
     const followingUsers = currentUserData?.following?.map(
@@ -102,7 +108,6 @@ function Home() {
                       <img
                         className="size-[40px] md:size-[50px] rounded-full object-cover"
                         src={
-                          
                           allUser?.find((user: any) => user._id === post.owner)
                             ?.photo || Img
                         }
@@ -110,7 +115,7 @@ function Home() {
                         alt="Post owner"
                       />
                       <div className="mb-[20px] flex flex-col">
-                    <h2>{post.owner.username}</h2>
+                        <h2>{post.owner.username}</h2>
                         <h1 className="text-[16px] md:text-[18px] font-semibold">
                           {
                             allUser?.find(
@@ -125,18 +130,36 @@ function Home() {
                     </div>
                     <p className="font-semibold">{post.content_alt}</p>
                   </header>
-                  <Swiper navigation={true} spaceBetween={10} modules={[Navigation]}>
+                  <Swiper
+                    navigation={true}
+                    spaceBetween={10}
+                    modules={[Navigation]}
+                  >
                     {post.content.map((content: any, contentIndex: number) => (
                       <SwiperSlide key={contentIndex}>
                         {content.type === "VIDEO" ? (
-                          <video controls className="w-full h-[500px] object-cover rounded-md" src={content.url} />
+                          <video
+                            controls
+                            className="w-full h-[500px] object-cover rounded-md"
+                            src={content.url}
+                          />
                         ) : (
-                          <img className="w-full h-[500px] object-cover rounded-md" src={content.url} alt="Post content" />
+                          <img
+                            className="w-full h-[500px] object-cover rounded-md"
+                            src={content.url}
+                            alt="Post content"
+                          />
                         )}
                       </SwiperSlide>
                     ))}
                   </Swiper>
-                          
+
+                  <div className="mt-4">
+                    <button onClick={() => handleLikeClick(post._id)} className="flex gap-[5px] items-center">
+                      <LikeIcon />
+                    <p>{post.likes.length}</p>
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (

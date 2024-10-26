@@ -112,6 +112,19 @@ export const productApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: "User" }],
     }),
+    likePost: build.mutation({
+      query: (username) => ({
+        url: `/api/post/${username}/like`,
+        method: "POST",
+      }),
+      invalidatesTags: [{ type: "User" }],
+    }),
+    getCurrentUserDatas: build.query({
+      query: () => ({
+        url: "/api/user/profile",
+      }),
+      providesTags: [{ type: "User" }],
+    }),
   }),
 });
 
@@ -131,6 +144,8 @@ export const {
   useGetUserProductQuery,
   useGetUserPostsQuery,
   useGetUserImagesQuery,
-  useGetCurrentUserDataQuery, // New hook for getting current user data
-  useUpdateUserMutation, // New hook for updating user details
+  useGetCurrentUserDataQuery,  
+  useLikePostMutation,
+  useUpdateUserMutation, 
+  useGetCurrentUserDatasQuery,
 } = productApi;

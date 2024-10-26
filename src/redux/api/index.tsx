@@ -78,5 +78,4 @@ export const {
   useGetCurrentUserDatasQuery,
   useGetUserPostsQuery,
   useGetUserImagesQuery,
-  useUpdateUserProfileMutation, // New hook for updating user profile
 } = api;

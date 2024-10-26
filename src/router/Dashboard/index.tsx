@@ -32,7 +32,7 @@ function DashboardRoutes() {
     () => import("../../pages/Dashboard/createPost/CreatePost")
   );
   const EditProfile: LazyExoticComponent<any> = lazy(
-    () => import("../../pages/Dashboard/editProfile/EditProfile")
+    () => import("../../pages/Dashboard/userProfileEdit/UserProfileEdit")
   );
   const AllUser: LazyExoticComponent<any> = lazy(
     () => import("../../pages/Dashboard/Users/Users")
