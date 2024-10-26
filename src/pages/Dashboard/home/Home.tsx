@@ -10,7 +10,7 @@ import {
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { LikeIcon, LikedIcon } from "../../../assets";
+import { LikeIcon } from "../../../assets";
 
 export const imageFileTypes = [
   ".png",
