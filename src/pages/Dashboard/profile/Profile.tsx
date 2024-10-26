@@ -5,7 +5,6 @@ import {
 import Image from "../../../../public/images/lion.svg";
 import { useNavigate } from "react-router-dom";
 
-import Img from "../../../public/images/lion.svg";
 const Profile = () => {
   const navigate = useNavigate();
   const currentUsername = window.localStorage.getItem("userData")

@@ -9,10 +9,9 @@ import {
 import Img from "../../../public/images/lion.svg";
 import { Modal } from "antd";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link } from "react-router-dom"; 
 
 function TopCreator() {
-  const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
   const [follow] = useFollowMutation();
   const [unfollow] = useUnfollowMutation();
