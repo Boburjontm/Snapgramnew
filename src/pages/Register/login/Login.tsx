@@ -1,6 +1,6 @@
 import { FormEvent, useContext, useState } from "react";
 import { LoginUser, UserInfo } from "../../../types";
-import { useLoginUserMutation } from "../../../redux/api/users-api";
+import { useLoginUserMutation } from "../../../redux/api/api";
 import { Link, useNavigate } from "react-router-dom";
 import InputComponent from "../../../components/input/Input";
 import { Context } from "../../../context/Context";
@@ -35,7 +35,9 @@ function Login() {
     try {
       const res = await loginUser(formData).unwrap();
       toast.success(
-        <div className="flex items-center">Welcome back, {formData.username}!</div>,
+        <div className="flex items-center">
+          Welcome back, {formData.username}!
+        </div>,
         {
           className: "rounded-lg bg-black_500 text-white shadow-lg",
           position: "top-center",
@@ -53,7 +55,9 @@ function Login() {
       navigate("/");
     } catch (err) {
       toast.error(
-        <div className="flex items-center">Something went wrong, please try again.</div>,
+        <div className="flex items-center">
+          Something went wrong, please try again.
+        </div>,
         {
           className: "rounded-lg bg-black_500 text-white shadow-lg",
           position: "top-center",
@@ -76,7 +80,9 @@ function Login() {
           </span>
           <div className="text-center space-y-[12px] mb-[32px]">
             <h1 className="font-bold text-3xl">Log in to your account</h1>
-            <p className="text-light-300">Welcome back! Please enter your details.</p>
+            <p className="text-light-300">
+              Welcome back! Please enter your details.
+            </p>
           </div>
           <div className="flex flex-col gap-5">
             {LoginInputInfo.map((item) => (
@@ -115,7 +121,11 @@ function Login() {
 
       <div className="hidden md:flex md:flex-1">
         {/* Update the img src to use the imported BackgroundImage */}
-        <img src={BackgroundImage} className="w-full h-full object-cover" alt="Background" />
+        <img
+          src={BackgroundImage}
+          className="w-full h-full object-cover"
+          alt="Background"
+        />
       </div>
     </section>
   );

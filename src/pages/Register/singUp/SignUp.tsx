@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { CreateNewUser, UserInfo } from "../../../types";
-import { useCreateUserMutation } from "../../../redux/api/users-api";
+import { useCreateUserMutation } from "../../../redux/api/api";
 import { Link, useNavigate } from "react-router-dom";
 import InputComponent from "../../../components/input/Input";
 import { toast } from "react-toastify";
@@ -49,7 +49,9 @@ function SignUp() {
         <form onSubmit={handleFormSubmit} className="w-[400px] text-white">
           <div className="text-center space-y-[12px] mb-[32px]">
             <h1 className="font-bold text-3xl">Create a new account</h1>
-            <p className="text-light-300">To use Snapgram, please enter your details.</p>
+            <p className="text-light-300">
+              To use Snapgram, please enter your details.
+            </p>
           </div>
 
           <div className="flex flex-col gap-5">
@@ -89,7 +91,11 @@ function SignUp() {
       </div>
 
       <div className="hidden md:flex md:flex-1">
-        <img src={Image} className="w-full h-full object-cover" alt="Background" />
+        <img
+          src={Image}
+          className="w-full h-full object-cover"
+          alt="Background"
+        />
       </div>
     </section>
   );

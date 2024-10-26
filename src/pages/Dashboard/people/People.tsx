@@ -5,11 +5,12 @@ import {
   useGetAllUserQuery,
   useGetUserQuery,
   useUnfollowMutation,
-} from "../../../redux/api/users-api";
+} from "../../../redux/api/api";
 import { User } from "../../../types";
 import { useState } from "react";
 import { Modal } from "antd";
 
+import Img from "../../../../public/images/lion.svg";
 function People() {
   const { data = [], isLoading } = useGetAllUserQuery(true);
   const [follow] = useFollowMutation();
@@ -67,9 +68,10 @@ function People() {
                 {user.photo ? (
                   <img
                     className="w-[54px] h-[54px] rounded-full mx-auto"
-                    src={import.meta.env.VITE_API_URL + user.photo}
+                    src={user.photo}
+                    onError={(e) => (e.currentTarget.src = Img)}
                     alt={user.fullName}
-                    onError={(e) => (e.currentTarget.src = "fallback-image-url")}
+                    
                   />
                 ) : (
                   <div className="w-[54px] h-[54px] rounded-full mx-auto bg-transparent"></div>
@@ -109,7 +111,7 @@ function People() {
         title={selectedUser?.fullName || "User Info"}
         open={isModalOpen}
         onCancel={closeUserModal}
-        footer={null} 
+        footer={null}
       >
         {selectedUser && (
           <div className="flex flex-col items-center gap-4">

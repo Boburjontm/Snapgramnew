@@ -5,12 +5,14 @@ import {
   useGetAllUserQuery,
   useGetUserQuery,
   useUnfollowMutation,
-} from "../../redux/api/users-api";
+} from "../../redux/api/api";
 import Img from "../../../public/images/lion.svg";
 import { Modal } from "antd";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; 
 
 function TopCreator() {
+  const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("userData") || "{}");
   const [follow] = useFollowMutation();
   const [unfollow] = useUnfollowMutation();
@@ -28,16 +30,12 @@ function TopCreator() {
     unfollow(username);
   };
 
-  const handleUserClick = (user: User) => {
-    setSelectedUser(user);
-  };
-
   const handleCloseModal = () => {
     setSelectedUser(null);
   };
 
   return (
-    <aside className="col-span-12 md:col-span-5 sticky top-0 right-0 h-screen overflow-y-auto px-4 md:px-6 py-6 md:py-12 bg-dark-200">
+    <div className="col-span-12 md:col-span-5 sticky top-0 right-0 h-screen overflow-y-auto px-4 md:px-6 py-6 md:py-12 bg-dark-200">
       <h1 className="font-bold text-[20px] md:text-[24px]">Top Creators</h1>
       <div className="grid grid-cols-12 gap-4 md:gap-6 mt-6 md:mt-10">
         {isLoading
@@ -54,7 +52,7 @@ function TopCreator() {
                 {user.photo ? (
                   <img
                     className="w-[54px] h-[54px] rounded-full mx-auto"
-                    src={import.meta.env.VITE_API_URL + user.photo}
+                    src={user.photo}
                     alt={user.fullName}
                     onError={(e) => (e.currentTarget.src = Img)}
                   />
@@ -63,19 +61,17 @@ function TopCreator() {
                     <span className="text-white text-sm">No Image</span>
                   </div>
                 )}
-                {user.photo && (
-                  <div className="text-center">
-                    <h1
-                      className="text-[12px] md:text-[14px] font-semibold cursor-pointer"
-                      onClick={() => handleUserClick(user)}
-                    >
+                <div className="text-center">
+                  <Link to={`/profile/${user.username}`}>
+                    <h1 className="text-[12px] md:text-[14px] font-semibold cursor-pointer">
                       {user.fullName}
                     </h1>
-                    <p className="text-[10px] text-light-300 font-medium">
-                      Followed by jsmastery
-                    </p>
-                  </div>
-                )}
+                  </Link>
+
+                  <p className="text-[10px] text-light-300 font-medium">
+                    Followed by jsmastery
+                  </p>
+                </div>
                 {currentUserData.data?.following?.some(
                   (item: any) => item.username === user.username
                 ) ? (
@@ -120,7 +116,7 @@ function TopCreator() {
           </div>
         )}
       </Modal>
-    </aside>
+    </div>
   );
 }
 

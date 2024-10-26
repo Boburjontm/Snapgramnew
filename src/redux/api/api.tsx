@@ -1,5 +1,4 @@
-// productApi.ts
-import { api } from "../api/index";
+import { api } from "./index";
 
 export const productApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -27,7 +26,7 @@ export const productApi = api.injectEndpoints({
     }),
     getAllUser: build.query({
       query: () => ({
-        url: "/api/user/all",
+        url: "/api/user/all?limit=1000",
       }),
       providesTags: ["User"],
     }),
@@ -67,25 +66,56 @@ export const productApi = api.injectEndpoints({
       }),
       invalidatesTags: [{ type: "User" }],
     }),
-     getUserName: build.query({
+    getUserName: build.query({
       query: (username) => ({
         url: `/api/user/profile/${username}`,
       }),
-      providesTags: [{ type: 'User' }],
-  
-  }),
-   getAllPosts: build.query({
-    query: (username) => ({
-      url: `/api/post/${username}`,
+      providesTags: [{ type: "User" }],
     }),
-    providesTags: [{ type: 'User' }],
-  }),
-   
-
-
+    getAllPosts: build.query({
+      query: (username) => ({
+        url: `/api/post/${username}`,
+      }),
+      providesTags: [{ type: "User" }],
+    }),
+    getUserProduct: build.query({
+      query: (username) => ({
+        url: `/api/user/profile/${username}`,
+      }),
+      providesTags: ["User"],
+    }),
+    getUserPosts: build.query({
+      query: (username) => ({
+        url: `/api/post/${username}`,
+      }),
+      providesTags: [{ type: "User" }],
+    }),
+    getUserImages: build.query({
+      query: (username) => ({
+        url: `/api/user/images/${username}`, // Your API endpoint
+      }),
+      providesTags: [{ type: "User" }],
+    }),
+    // New endpoint for getting current user data
+    getCurrentUserData: build.query({
+      query: () => ({
+        url: "/api/user/current", // Your API endpoint to get current user data
+      }),
+      providesTags: ["User"],
+    }),
+    // New endpoint for updating user details
+    updateUser: build.mutation({
+      query: (body) => ({
+        url: "/api/user/update", // Your API endpoint for updating user details
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: [{ type: "User" }],
+    }),
   }),
 });
 
+// Export hooks
 export const {
   useCreateUserMutation,
   useLoginUserMutation,
@@ -97,6 +127,10 @@ export const {
   useCreatePostMutation,
   useUploadFilesMutation,
   useGetUserNameQuery,
-  useGetAllPostsQuery
-  
+  useGetAllPostsQuery,
+  useGetUserProductQuery,
+  useGetUserPostsQuery,
+  useGetUserImagesQuery,
+  useGetCurrentUserDataQuery, // New hook for getting current user data
+  useUpdateUserMutation, // New hook for updating user details
 } = productApi;
